@@ -6,9 +6,11 @@
 #include <string>
 #include <string_view>
 
-#include "../include/Error.h"
-#include "../include/Ini.h"
-#include "../include/IniParser.h"
+#include "IniParser/IniError.h"
+#include "IniParser/Ini.h"
+#include "IniParser/IniParser.h"
+
+using namespace inip;
 
 constexpr std::string_view iniFileExt{ ".ini" };
 
