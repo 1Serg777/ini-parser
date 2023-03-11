@@ -3,6 +3,7 @@
 #include "Ini.h"
 #include "IniScanner.h"
 
+#include <filesystem>
 #include <memory>
 
 // Parser related errors
@@ -32,13 +33,16 @@ public:
 	IniParser();
 	~IniParser();
 
-	void Parse(const std::string& iniSource);
+	void Parse(const std::filesystem::path& iniFilePath);
+	void Parse(const std::string& iniSource, const std::string& iniSettingsName);
 
 	std::shared_ptr<IniSettings> GetIniSettings() const;
 
 private:
 
 	void InitializeIniParser();
+
+	std::string GetIniFileSrc(const std::filesystem::path& iniFilePath) const;
 
 	std::shared_ptr<IniGroup> Group();
 	std::string GroupId();

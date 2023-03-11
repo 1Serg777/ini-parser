@@ -7,6 +7,7 @@
 #include <typeinfo>
 #include <type_traits>
 #include <unordered_map>
+#include <vector>
 
 #include "../include/Error.h"
 
@@ -129,6 +130,8 @@ public:
 		return option->GetValue<T>();
 	}
 
+	std::vector<std::shared_ptr<IniOption>> GetGroupOptions() const;
+
 	const std::string& GetGroupName() const;
 
 private:
@@ -137,18 +140,33 @@ private:
 	std::string iniGroupName;
 };
 
+// Ini Settings
+
 class IniSettings
 {
 public:
 
+	IniSettings(const std::string& iniSettingsName);
+
 	void AddGroup(std::shared_ptr<IniGroup> iniGroup);
 	std::shared_ptr<IniGroup> GetGroup(const std::string& groupName) const;
+
+	std::vector<std::shared_ptr<IniGroup>> GetSettingsGroups() const;
+
+	const std::string& GetIniSettingsName() const;
 
 private:
 
 	std::unordered_map<std::string, std::shared_ptr<IniGroup>> groups;
+	std::string iniSettingsName;
 };
 
 // Ini Settings printer?
 
-void PrintIniSettings(std::ostream& outputStream, std::shared_ptr<IniSettings> iniSettings);
+class IniSettingsPrinter
+{
+public:
+	static void PrintIniSettings(std::ostream& outputStream, std::shared_ptr<IniSettings> iniSettings);
+	static void PrintIniGroup(std::ostream& outputStream, std::shared_ptr<IniGroup> iniGroup);
+	static void PrintIniOption(std::ostream& outputStream, std::shared_ptr<IniOption> iniOption);
+};

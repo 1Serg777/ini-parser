@@ -1,6 +1,7 @@
 #include "../include/IniParser.h"
 
 #include <cassert>
+#include <fstream>
 #include <sstream>
 
 // IniParserError
@@ -40,11 +41,18 @@ IniParser::~IniParser()
 	Clear();
 }
 
-void IniParser::Parse(const std::string& iniSource)
+void IniParser::Parse(const std::filesystem::path& iniFilePath)
+{
+	std::string iniSrc = GetIniFileSrc(iniFilePath);
+	std::filesystem::path iniFileName = iniFilePath;
+
+	Parse(iniSrc, iniFileName.replace_extension().generic_string());
+}
+void IniParser::Parse(const std::string& iniSource, const std::string& iniSettingsName)
 {
 	Clear();
 
-	iniSettings = std::make_shared<IniSettings>();
+	iniSettings = std::make_shared<IniSettings>(iniSettingsName);
 
 	iniScanner->Scan(iniSource);
 	tokens = iniScanner->GetTokensPtr();
@@ -64,6 +72,23 @@ std::shared_ptr<IniSettings> IniParser::GetIniSettings() const
 void IniParser::InitializeIniParser()
 {
 	iniScanner = std::make_unique<IniScanner>();
+}
+
+std::string IniParser::GetIniFileSrc(const std::filesystem::path& iniFilePath) const
+{
+	assert(!iniFilePath.empty() && "The path to an ini file must not be empty!");
+	std::ifstream file{ iniFilePath , std::ios::binary };
+
+	if (file.fail())
+	{
+		throw std::ifstream::failure{ "I/O runtime error was thrown openning a shader file!" };
+	}
+
+	std::ostringstream ostream{};
+	ostream << file.rdbuf();
+
+	std::string iniSrc = ostream.str();
+	return iniSrc;
 }
 
 std::shared_ptr<IniGroup> IniParser::Group()

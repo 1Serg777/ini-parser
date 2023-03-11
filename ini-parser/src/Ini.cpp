@@ -71,12 +71,27 @@ std::shared_ptr<IniOption> IniGroup::GetOption(const std::string& key) const
 	return find->second;
 }
 
+std::vector<std::shared_ptr<IniOption>> IniGroup::GetGroupOptions() const
+{
+	std::vector<std::shared_ptr<IniOption>> groupOptions;
+	for (const auto& [optionName, option] : options)
+	{
+		groupOptions.push_back(option);
+	}
+	return groupOptions;
+}
+
 const std::string& IniGroup::GetGroupName() const
 {
 	return iniGroupName;
 }
 
 // Ini Settings
+
+IniSettings::IniSettings(const std::string& iniSettingsName)
+	: iniSettingsName(iniSettingsName)
+{
+}
 
 void IniSettings::AddGroup(std::shared_ptr<IniGroup> iniGroup)
 {
@@ -90,7 +105,41 @@ std::shared_ptr<IniGroup> IniSettings::GetGroup(const std::string& groupName) co
 	return find->second;
 }
 
-void PrintIniSettings(std::ostream& outputStream, std::shared_ptr<IniSettings> iniSettings)
+std::vector<std::shared_ptr<IniGroup>> IniSettings::GetSettingsGroups() const
 {
+	std::vector<std::shared_ptr<IniGroup>> settingsGroups;
+	for (const auto& [groupName, group] : groups)
+	{
+		settingsGroups.push_back(group);
+	}
+	return settingsGroups;
+}
 
+const std::string& IniSettings::GetIniSettingsName() const
+{
+	return iniSettingsName;
+}
+
+// Ini Settings Printer
+
+void IniSettingsPrinter::PrintIniSettings(std::ostream& outputStream, std::shared_ptr<IniSettings> iniSettings)
+{
+	outputStream << "Settings: " << iniSettings->GetIniSettingsName() << "\n\n";
+	for (const auto& group : iniSettings->GetSettingsGroups())
+	{
+		PrintIniGroup(outputStream, group);
+		std::cout << "\n";
+	}
+}
+void IniSettingsPrinter::PrintIniGroup(std::ostream& outputStream, std::shared_ptr<IniGroup> iniGroup)
+{
+	outputStream << "[" << iniGroup->GetGroupName() << "]\n";
+	for (const auto& option : iniGroup->GetGroupOptions())
+	{
+		PrintIniOption(outputStream, option);
+	}
+}
+void IniSettingsPrinter::PrintIniOption(std::ostream& outputStream, std::shared_ptr<IniOption> iniOption)
+{
+	outputStream << iniOption->GetKey() << " = " << iniOption->GetValue<std::string>() << "\n";
 }
