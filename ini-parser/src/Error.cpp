@@ -32,18 +32,18 @@ void IniSettingValueCastError::SetupErrorMessage(
 
 // IniSettingKeyNotFoundError
 
-IniSettingKeyNotFoundError::IniSettingKeyNotFoundError(const std::string& key)
+IniSettingOptionNotFoundError::IniSettingOptionNotFoundError(const std::string& key)
 	: std::runtime_error("")
 {
 	SetupErrorMessage(key);
 }
 
-_NODISCARD char const* IniSettingKeyNotFoundError::what() const
+_NODISCARD char const* IniSettingOptionNotFoundError::what() const
 {
 	return message.c_str();
 }
 
-void IniSettingKeyNotFoundError::SetupErrorMessage(const std::string& key)
+void IniSettingOptionNotFoundError::SetupErrorMessage(const std::string& key)
 {
 	std::stringstream stream{};
 	stream << "Unable to find a key. " << "Key: [" << key << "]";

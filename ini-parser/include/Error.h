@@ -27,11 +27,11 @@ private:
 	std::string message;
 };
 
-class IniSettingKeyNotFoundError : std::runtime_error
+class IniSettingOptionNotFoundError : std::runtime_error
 {
 public:
 
-	IniSettingKeyNotFoundError(const std::string& key);
+	IniSettingOptionNotFoundError(const std::string& key);
 
 	_NODISCARD char const* what() const override;
 

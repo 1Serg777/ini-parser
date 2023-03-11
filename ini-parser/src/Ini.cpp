@@ -1,7 +1,5 @@
 #include "../include/Ini.h"
 
-#include "../include/Error.h"
-
 // Helper functions
 
 //template <>
@@ -10,109 +8,67 @@
 //	return value;
 //}
 
-// IniGroup
+std::string IniOptionTypeToString(IniOptionType optionType)
+{
+	switch (optionType)
+	{
+	case IniOptionType::STRING:
+		return "STRING";
+		break;
+	case IniOptionType::INTEGER:
+		return "INTEGER";
+		break;
+	case IniOptionType::FLOAT:
+		return "FLOAT";
+		break;
+	}
+	return "UNDEFINED";
+}
+
+// Ini Option
+
+IniOption::IniOption(
+	const std::string& key,
+	const std::string& value,
+	IniOptionType optionType)
+	: key(key), value(value), optionType(optionType)
+{
+}
+
+const std::string& IniOption::GetKey() const
+{
+	return key;
+}
+
+IniOptionType IniOption::GetOptionType() const
+{
+	return optionType;
+}
+
+// Ini Group
 
 IniGroup::IniGroup(const std::string& iniGroupName)
 	: iniGroupName(iniGroupName)
 {
 }
 
-const std::string& IniGroup::GetValueStr(const std::string& key) const
+void IniGroup::AddOption(std::shared_ptr<IniOption> iniOption)
+{
+	options.insert({ iniOption->GetKey(), iniOption });
+}
+
+bool IniGroup::OptionExists(const std::string& key) const
+{
+	std::shared_ptr<IniOption> option = GetOption(key);
+	return option ? true : false;
+}
+
+std::shared_ptr<IniOption> IniGroup::GetOption(const std::string& key) const
 {
 	auto find = options.find(key);
 	if (find == options.end())
-		throw IniSettingKeyNotFoundError(key);
+		return std::shared_ptr<IniOption>{};
 	return find->second;
-}
-
-long long IniGroup::GetValueLongLong(const std::string& key) const
-{
-	auto find = options.find(key);
-	if (find == options.end())
-		throw IniSettingKeyNotFoundError(key);
-
-	long long val{};
-	try
-	{
-		val = std::stoll(find->second);
-	}
-	catch (std::invalid_argument iae)
-	{
-		throw IniSettingValueCastError(key, find->second, "long long");
-	}
-	catch (std::out_of_range oore)
-	{
-		throw IniSettingValueCastError(key, find->second, "long long");
-	}
-
-	return val;
-}
-int IniGroup::GetValueInt(const std::string& key) const
-{
-	auto find = options.find(key);
-	if (find == options.end())
-		throw IniSettingKeyNotFoundError(key);
-
-	int val{};
-	try
-	{
-		val = std::stoi(find->second);
-	}
-	catch (std::invalid_argument iae)
-	{
-		throw IniSettingValueCastError(key, find->second, "int");
-	}
-	catch (std::out_of_range oore)
-	{
-		throw IniSettingValueCastError(key, find->second, "int");
-	}
-
-	return val;
-}
-
-double IniGroup::GetValueDouble(const std::string& key) const
-{
-	auto find = options.find(key);
-	if (find == options.end())
-		throw IniSettingKeyNotFoundError(key);
-
-	double val{};
-	try
-	{
-		val = std::stod(find->second);
-	}
-	catch (std::invalid_argument iae)
-	{
-		throw IniSettingValueCastError(key, find->second, "double");
-	}
-	catch (std::out_of_range oore)
-	{
-		throw IniSettingValueCastError(key, find->second, "double");
-	}
-
-	return val;
-}
-float IniGroup::GetValueFloat(const std::string& key) const
-{
-	auto find = options.find(key);
-	if (find == options.end())
-		throw IniSettingKeyNotFoundError(key);
-
-	float val{};
-	try
-	{
-		val = std::stof(find->second);
-	}
-	catch (std::invalid_argument iae)
-	{
-		throw IniSettingValueCastError(key, find->second, "float");
-	}
-	catch (std::out_of_range oore)
-	{
-		throw IniSettingValueCastError(key, find->second, "float");
-	}
-
-	return val;
 }
 
 const std::string& IniGroup::GetGroupName() const
@@ -120,7 +76,7 @@ const std::string& IniGroup::GetGroupName() const
 	return iniGroupName;
 }
 
-// IniSettings
+// Ini Settings
 
 void IniSettings::AddGroup(std::shared_ptr<IniGroup> iniGroup)
 {
@@ -132,4 +88,9 @@ std::shared_ptr<IniGroup> IniSettings::GetGroup(const std::string& groupName) co
 	if (find == groups.end())
 		return std::shared_ptr<IniGroup>{};
 	return find->second;
+}
+
+void PrintIniSettings(std::ostream& outputStream, std::shared_ptr<IniSettings> iniSettings)
+{
+
 }

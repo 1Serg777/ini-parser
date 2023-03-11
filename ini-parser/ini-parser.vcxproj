@@ -133,11 +133,15 @@
   <ItemGroup>
     <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\Ini.cpp" />
+    <ClCompile Include="src\IniParser.cpp" />
+    <ClCompile Include="src\IniScanner.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Error.h" />
     <ClInclude Include="include\Ini.h" />
+    <ClInclude Include="include\IniParser.h" />
+    <ClInclude Include="include\IniScanner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

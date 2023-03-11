@@ -24,12 +24,24 @@
     <ClCompile Include="src\Ini.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\IniScanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IniParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Ini.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IniScanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IniParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
